@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+//#include <bits/stdc++.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 #define endl '\n'
 using namespace std;
 string txt = ".txt";
@@ -26,13 +29,17 @@ void SignUp(string user)
     UserFile << password;
     UserFile.close();
 }
-bool Login(string user)
+bool Login(string& user)
 {
     cout << "[Press * to Menu] ";
-    user = Filename(user);
-    ifstream ReadFile(user);
+    string userfile;
+    cout<<"Enter username: ";
+    cin>>user;
+    userfile=user+".txt";
+    
+    ifstream ReadFile(userfile);
     if(!ReadFile.is_open()) {
-        if(user=="*.txt")
+        if(userfile=="*.txt")
             return false;
         else{
         cout << "User does not exist!" << endl;
@@ -40,7 +47,7 @@ bool Login(string user)
         return false;
         }
     }
-
+    cin.ignore();
     string pass;
     getline(ReadFile, pass);
     ReadFile.close();
@@ -54,15 +61,18 @@ bool Login(string user)
     else
     {
         cout << "NO" << endl;
-        int pos = user.find(".");
-        user = user.substr(0, pos);
+        int pos = userfile.find(".");
+        userfile = userfile.substr(0, pos);
         Login(user);
     }
 }
 void ReadDiary(const string& user)
 {
+    cout<<"user = " <<user<<"\n";
     ifstream MyReadFile(user); //ios::in
+    
     if(MyReadFile.is_open()){ string myText;
+    //cin.ignore();
     while(getline (MyReadFile, myText))
     {
         for(auto x:myText)
@@ -72,12 +82,15 @@ void ReadDiary(const string& user)
     }
     }
     MyReadFile.close();
+   // exit(0);
 }
 void WriteDiary(const string& user)
 {
     cout << "Start typing from here: " << endl;
-    ofstream MyFile(user); //ios::out
+    string userfile=user+"1.txt";
+    ofstream MyFile(userfile); //ios::out
     if(MyFile.is_open()){ string input;
+    cin.ignore();
     while(getline(cin, input))
     {
         if(input=="*")
@@ -86,6 +99,7 @@ void WriteDiary(const string& user)
         {
             MyFile << char(x+2);
         }
+        break;
         MyFile << endl;
     }
     }
@@ -95,7 +109,7 @@ void WriteDiary(const string& user)
     cout << "Read your file? (y/n) : ";
     cin >> yes;
     if(yes == 'y')
-        ReadDiary(user);
+        ReadDiary(userfile);
     else
         exit(0);
 }
@@ -104,11 +118,11 @@ string HomePage(string username)
     while(true)
     {
         int option;
-    cout << "Press 1 to Sign up" << endl;
-    cout << "Press 2 to Log in" << endl;
-    cout << "Press otherwise to Exit" << endl;
-    cout << "Your choice - ";
-    cin >> option;
+        cout << "Press 1 to Sign up" << endl;
+        cout << "Press 2 to Log in" << endl;
+        cout << "Press otherwise to Exit" << endl;
+        cout << "Your choice - ";
+        cin >> option;
 
         username = "*";
         if(option==1)
@@ -130,7 +144,7 @@ string HomePage(string username)
             else
             {
                 WriteDiary(username);
-                return 0;
+                exit(0);
             }
         }
         else
