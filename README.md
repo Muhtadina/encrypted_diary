@@ -1,5 +1,5 @@
 # Encrypted Diary 
-## cpp version
+### cpp version
 - Sign up
 - Login
 - Write Text in the compiler to the `.txt` file
